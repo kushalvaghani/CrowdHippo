@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[Tweets]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
+	[EfTweetId] INT NULL,
+	[Text] NVARCHAR(MAX) NULL
+)
+ALTER TABLE Tweets
+Add Hashtags NVARCHAR(500)
+
+ALTER TABLE Tweets
+Add LinkText NVARCHAR(MAX)

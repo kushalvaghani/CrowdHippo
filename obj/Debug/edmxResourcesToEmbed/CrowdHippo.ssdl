@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CrowdHippoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="AspNetUsers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Hometown" Type="nvarchar(max)" />
+    <Property Name="Email" Type="nvarchar" MaxLength="256" />
+    <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+    <Property Name="PasswordHash" Type="nvarchar(max)" />
+    <Property Name="SecurityStamp" Type="nvarchar(max)" />
+    <Property Name="PhoneNumber" Type="nvarchar(max)" />
+    <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="datetime" />
+    <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Keywords">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TweetId" Type="int" Nullable="false" />
+    <Property Name="SourceId" Type="int" Nullable="false" />
+    <Property Name="Keyword" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Source">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SourceName" Type="nvarchar" MaxLength="10" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Tags">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Tweets">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EfTweetId" Type="int" />
+    <Property Name="Text" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="UserKeywordTags">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="KeywordId" Type="int" Nullable="false" />
+    <Property Name="TagId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__Keywords__Source__3B75D760">
+    <End Role="Source" Type="Self.Source" Multiplicity="1" />
+    <End Role="Keywords" Type="Self.Keywords" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Source">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Keywords">
+        <PropertyRef Name="SourceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Keywords__TweetI__3A81B327">
+    <End Role="Tweets" Type="Self.Tweets" Multiplicity="1" />
+    <End Role="Keywords" Type="Self.Keywords" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tweets">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Keywords">
+        <PropertyRef Name="TweetId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserKeywo__Keywo__4BAC3F29">
+    <End Role="Keywords" Type="Self.Keywords" Multiplicity="1" />
+    <End Role="UserKeywordTags" Type="Self.UserKeywordTags" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Keywords">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserKeywordTags">
+        <PropertyRef Name="KeywordId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserKeywo__TagId__4CA06362">
+    <End Role="Tags" Type="Self.Tags" Multiplicity="1" />
+    <End Role="UserKeywordTags" Type="Self.UserKeywordTags" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tags">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserKeywordTags">
+        <PropertyRef Name="TagId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserKeywo__UserI__4D94879B">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="UserKeywordTags" Type="Self.UserKeywordTags" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserKeywordTags">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CrowdHippoModelStoreContainer">
+    <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Keywords" EntityType="Self.Keywords" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Source" EntityType="Self.Source" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tags" EntityType="Self.Tags" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tweets" EntityType="Self.Tweets" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UserKeywordTags" EntityType="Self.UserKeywordTags" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Keywords__Source__3B75D760" Association="Self.FK__Keywords__Source__3B75D760">
+      <End Role="Source" EntitySet="Source" />
+      <End Role="Keywords" EntitySet="Keywords" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Keywords__TweetI__3A81B327" Association="Self.FK__Keywords__TweetI__3A81B327">
+      <End Role="Tweets" EntitySet="Tweets" />
+      <End Role="Keywords" EntitySet="Keywords" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserKeywo__Keywo__4BAC3F29" Association="Self.FK__UserKeywo__Keywo__4BAC3F29">
+      <End Role="Keywords" EntitySet="Keywords" />
+      <End Role="UserKeywordTags" EntitySet="UserKeywordTags" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserKeywo__TagId__4CA06362" Association="Self.FK__UserKeywo__TagId__4CA06362">
+      <End Role="Tags" EntitySet="Tags" />
+      <End Role="UserKeywordTags" EntitySet="UserKeywordTags" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserKeywo__UserI__4D94879B" Association="Self.FK__UserKeywo__UserI__4D94879B">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="UserKeywordTags" EntitySet="UserKeywordTags" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,431 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CrowdHippoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Hometown" Type="nvarchar(max)" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Keywords">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TweetId" Type="int" Nullable="false" />
+          <Property Name="SourceId" Type="int" Nullable="false" />
+          <Property Name="Keyword" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SourceName" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tags">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tweets">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EfTweetId" Type="int" />
+          <Property Name="Text" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="UserKeywordTags">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KeywordId" Type="int" Nullable="false" />
+          <Property Name="TagId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Keywords__Source__3B75D760">
+          <End Role="Source" Type="Self.Source" Multiplicity="1" />
+          <End Role="Keywords" Type="Self.Keywords" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Keywords">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Keywords__TweetI__3A81B327">
+          <End Role="Tweets" Type="Self.Tweets" Multiplicity="1" />
+          <End Role="Keywords" Type="Self.Keywords" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tweets">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Keywords">
+              <PropertyRef Name="TweetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserKeywo__Keywo__4BAC3F29">
+          <End Role="Keywords" Type="Self.Keywords" Multiplicity="1" />
+          <End Role="UserKeywordTags" Type="Self.UserKeywordTags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Keywords">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserKeywordTags">
+              <PropertyRef Name="KeywordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserKeywo__TagId__4CA06362">
+          <End Role="Tags" Type="Self.Tags" Multiplicity="1" />
+          <End Role="UserKeywordTags" Type="Self.UserKeywordTags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tags">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserKeywordTags">
+              <PropertyRef Name="TagId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserKeywo__UserI__4D94879B">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserKeywordTags" Type="Self.UserKeywordTags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserKeywordTags">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CrowdHippoModelStoreContainer">
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Keywords" EntityType="Self.Keywords" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Source" EntityType="Self.Source" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tags" EntityType="Self.Tags" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tweets" EntityType="Self.Tweets" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserKeywordTags" EntityType="Self.UserKeywordTags" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Keywords__Source__3B75D760" Association="Self.FK__Keywords__Source__3B75D760">
+            <End Role="Source" EntitySet="Source" />
+            <End Role="Keywords" EntitySet="Keywords" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Keywords__TweetI__3A81B327" Association="Self.FK__Keywords__TweetI__3A81B327">
+            <End Role="Tweets" EntitySet="Tweets" />
+            <End Role="Keywords" EntitySet="Keywords" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserKeywo__Keywo__4BAC3F29" Association="Self.FK__UserKeywo__Keywo__4BAC3F29">
+            <End Role="Keywords" EntitySet="Keywords" />
+            <End Role="UserKeywordTags" EntitySet="UserKeywordTags" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserKeywo__TagId__4CA06362" Association="Self.FK__UserKeywo__TagId__4CA06362">
+            <End Role="Tags" EntitySet="Tags" />
+            <End Role="UserKeywordTags" EntitySet="UserKeywordTags" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserKeywo__UserI__4D94879B" Association="Self.FK__UserKeywo__UserI__4D94879B">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserKeywordTags" EntitySet="UserKeywordTags" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CrowdHippoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Keyword">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TweetId" Type="Int32" Nullable="false" />
+          <Property Name="SourceId" Type="Int32" Nullable="false" />
+          <Property Name="Keyword1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Source" Relationship="Self.FK__Keywords__Source__3B75D760" FromRole="Keywords" ToRole="Source" />
+          <NavigationProperty Name="Tweet" Relationship="Self.FK__Keywords__TweetI__3A81B327" FromRole="Keywords" ToRole="Tweets" />
+          <NavigationProperty Name="UserKeywordTags" Relationship="CrowdHippoModel.FK__UserKeywo__Keywo__4BAC3F29" FromRole="Keyword" ToRole="UserKeywordTag" />
+        </EntityType>
+        <EntityType Name="Source">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SourceName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Keywords" Relationship="Self.FK__Keywords__Source__3B75D760" FromRole="Source" ToRole="Keywords" />
+        </EntityType>
+        <EntityType Name="Tag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UserKeywordTags" Relationship="CrowdHippoModel.FK__UserKeywo__TagId__4CA06362" FromRole="Tag" ToRole="UserKeywordTag" />
+        </EntityType>
+        <EntityType Name="Tweet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EfTweetId" Type="Int32" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Keywords" Relationship="Self.FK__Keywords__TweetI__3A81B327" FromRole="Tweets" ToRole="Keywords" />
+        </EntityType>
+        <Association Name="FK__Keywords__Source__3B75D760">
+          <End Role="Source" Type="Self.Source" Multiplicity="1" />
+          <End Role="Keywords" Type="Self.Keyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Source">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Keywords">
+              <PropertyRef Name="SourceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Keywords__TweetI__3A81B327">
+          <End Role="Tweets" Type="Self.Tweet" Multiplicity="1" />
+          <End Role="Keywords" Type="Self.Keyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tweets">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Keywords">
+              <PropertyRef Name="TweetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CrowdHippoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Keywords" EntityType="Self.Keyword" />
+          <EntitySet Name="Sources" EntityType="Self.Source" />
+          <EntitySet Name="Tags" EntityType="Self.Tag" />
+          <EntitySet Name="Tweets" EntityType="Self.Tweet" />
+          <AssociationSet Name="FK__Keywords__Source__3B75D760" Association="Self.FK__Keywords__Source__3B75D760">
+            <End Role="Source" EntitySet="Sources" />
+            <End Role="Keywords" EntitySet="Keywords" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Keywords__TweetI__3A81B327" Association="Self.FK__Keywords__TweetI__3A81B327">
+            <End Role="Tweets" EntitySet="Tweets" />
+            <End Role="Keywords" EntitySet="Keywords" />
+          </AssociationSet>
+          <EntitySet Name="UserKeywordTags" EntityType="CrowdHippoModel.UserKeywordTag" />
+          <EntitySet Name="Users" EntityType="CrowdHippoModel.User" />
+          <AssociationSet Name="FK__UserKeywo__Keywo__4BAC3F29" Association="CrowdHippoModel.FK__UserKeywo__Keywo__4BAC3F29">
+            <End Role="Keyword" EntitySet="Keywords" />
+            <End Role="UserKeywordTag" EntitySet="UserKeywordTags" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserKeywo__TagId__4CA06362" Association="CrowdHippoModel.FK__UserKeywo__TagId__4CA06362">
+            <End Role="Tag" EntitySet="Tags" />
+            <End Role="UserKeywordTag" EntitySet="UserKeywordTags" />
+          </AssociationSet>
+          <AssociationSet Name="FK__UserKeywo__UserI__4D94879B" Association="CrowdHippoModel.FK__UserKeywo__UserI__4D94879B">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserKeywordTag" EntitySet="UserKeywordTags" />
+          </AssociationSet>
+          <EntitySet Name="AspNetUsers" EntityType="CrowdHippoModel.AspNetUser" />
+        </EntityContainer>
+        <EntityType Name="UserKeywordTag">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KeywordId" Type="Int32" Nullable="false" />
+          <Property Name="TagId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Keyword" Relationship="CrowdHippoModel.FK__UserKeywo__Keywo__4BAC3F29" FromRole="UserKeywordTag" ToRole="Keyword" />
+          <NavigationProperty Name="Tag" Relationship="CrowdHippoModel.FK__UserKeywo__TagId__4CA06362" FromRole="UserKeywordTag" ToRole="Tag" />
+          <NavigationProperty Name="User" Relationship="CrowdHippoModel.FK__UserKeywo__UserI__4D94879B" FromRole="UserKeywordTag" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserKeywordTags" Relationship="CrowdHippoModel.FK__UserKeywo__UserI__4D94879B" FromRole="User" ToRole="UserKeywordTag" />
+        </EntityType>
+        <Association Name="FK__UserKeywo__Keywo__4BAC3F29">
+          <End Type="CrowdHippoModel.Keyword" Role="Keyword" Multiplicity="1" />
+          <End Type="CrowdHippoModel.UserKeywordTag" Role="UserKeywordTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Keyword">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserKeywordTag">
+              <PropertyRef Name="KeywordId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserKeywo__TagId__4CA06362">
+          <End Type="CrowdHippoModel.Tag" Role="Tag" Multiplicity="1" />
+          <End Type="CrowdHippoModel.UserKeywordTag" Role="UserKeywordTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tag">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserKeywordTag">
+              <PropertyRef Name="TagId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__UserKeywo__UserI__4D94879B">
+          <End Type="CrowdHippoModel.User" Role="User" Multiplicity="1" />
+          <End Type="CrowdHippoModel.UserKeywordTag" Role="UserKeywordTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserKeywordTag">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Hometown" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CrowdHippoModelStoreContainer" CdmEntityContainer="CrowdHippoEntities">
+          <EntitySetMapping Name="Keywords">
+            <EntityTypeMapping TypeName="CrowdHippoModel.Keyword">
+              <MappingFragment StoreEntitySet="Keywords">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TweetId" ColumnName="TweetId" />
+                <ScalarProperty Name="SourceId" ColumnName="SourceId" />
+                <ScalarProperty Name="Keyword1" ColumnName="Keyword" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sources">
+            <EntityTypeMapping TypeName="CrowdHippoModel.Source">
+              <MappingFragment StoreEntitySet="Source">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SourceName" ColumnName="SourceName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tags">
+            <EntityTypeMapping TypeName="CrowdHippoModel.Tag">
+              <MappingFragment StoreEntitySet="Tags">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tweets">
+            <EntityTypeMapping TypeName="CrowdHippoModel.Tweet">
+              <MappingFragment StoreEntitySet="Tweets">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EfTweetId" ColumnName="EfTweetId" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserKeywordTags">
+            <EntityTypeMapping TypeName="CrowdHippoModel.UserKeywordTag">
+              <MappingFragment StoreEntitySet="UserKeywordTags">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="TagId" ColumnName="TagId" />
+                <ScalarProperty Name="KeywordId" ColumnName="KeywordId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="CrowdHippoModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="CrowdHippoModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Hometown" ColumnName="Hometown" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
